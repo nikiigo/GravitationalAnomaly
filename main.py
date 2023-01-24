@@ -1,6 +1,6 @@
 import logging
 import sys
-from numpy import sqrt, cbrt, pi
+from numpy import sqrt, cbrt, pi, arccos
 
 logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
 
@@ -26,6 +26,14 @@ class Vector:
     def unit(self):
 
         return Vector(self.x / self.magnitude(), self.y / self.magnitude(), self.z / self.magnitude())
+
+    # Method to calculate an angle between 2 Vectors
+    def angle(self, v):
+
+        if isinstance(v, Vector):
+            return arccos((self ^ v) / (self.magnitude() * v.magnitude()))
+        else:
+            raise ValueError
 
     # Method to add to Vector
     def __add__(self, v):
@@ -81,7 +89,7 @@ if __name__ == "__main__":
     # Define a mountain as a truncated cone with height and radius in meters
     h = 1080
     r1 = 3000
-    r2 = 100
+    r2 = 50
     vol = pi / 3 * h * (r1 ** 2 + r1 * r2 + r2 ** 2)
     vol1 = vol / 5
 
@@ -139,16 +147,14 @@ if __name__ == "__main__":
         logging.info(f'the resulting force vector in the 1 point model: {str(fvec1m)}')
 
         # Calculate angle between plumb line at the foot of the mountain and the line without mountain
-        # the angle in accordance with 5 point model (x is about sinx):
-        angle5 = sqrt((1 - (((fvec5m + fvece) ^ fvece) /
-                       ((fvec5m + fvece).magnitude() * fvece.magnitude())) ** 2)) / pi * 180
-        # the angle in accordance with 5 point model (x is about sinx):
-        angle1 = sqrt((1 - (((fvec1m + fvece) ^ fvece) /
-                       ((fvec1m + fvece).magnitude() * fvece.magnitude())) ** 2)) / pi * 180
+        # the angle in accordance with 5 point model:
+        angle5 = (fvece + fvec5m).angle(fvece)
+        # the angle in accordance with 1 point model:
+        angle1 = (fvece + fvec1m).angle(fvece)
         print("-----------------------------------------------------------------------------------------------------")
         print(f'For rock density {den} kg/m^3')
         print('The plumb is at the level of the foot of the mountain')
         print("-----------------------------------------------------------------------------------------------------")
-        print(f'5 points model predicts that the angle is {decdeg2dms(angle5)} degrees, minutes, seconds')
-        print(f'1 point model  predicts that the angle  is {decdeg2dms(angle1)} degrees, minutes, seconds')
+        print(f'5 points model predicts that the angle is {decdeg2dms(angle5 / pi * 180)} degrees, minutes, seconds')
+        print(f'1 point model  predicts that the angle  is {decdeg2dms(angle1 / pi * 180)} degrees, minutes, seconds')
         print(f'The difference is {(angle5 - angle1) / angle5 * 100} percents')
