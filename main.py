@@ -140,11 +140,11 @@ if __name__ == "__main__":
 
         # Calculate angle between plumb line at the foot of the mountain and the line without mountain
         # the angle in accordance with 5 point model (x is about sinx):
-        angle5 = sqrt((1 - ((fvec5m + fvece) ^ fvece) /
-                       ((fvec5m + fvece).magnitude() * fvece.magnitude()))) / pi * 180
+        angle5 = sqrt((1 - (((fvec5m + fvece) ^ fvece) /
+                       ((fvec5m + fvece).magnitude() * fvece.magnitude())) ** 2)) / pi * 180
         # the angle in accordance with 5 point model (x is about sinx):
-        angle1 = sqrt((1 - ((fvec1m + fvece) ^ fvece) /
-                       ((fvec1m + fvece).magnitude() * fvece.magnitude()))) / pi * 180
+        angle1 = sqrt((1 - (((fvec1m + fvece) ^ fvece) /
+                       ((fvec1m + fvece).magnitude() * fvece.magnitude())) ** 2)) / pi * 180
         print("-----------------------------------------------------------------------------------------------------")
         print(f'For rock density {den} kg/m^3')
         print('The plumb is at the level of the foot of the mountain')
